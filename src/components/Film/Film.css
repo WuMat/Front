@@ -1,0 +1,22 @@
+.film{
+  background-color: #4a4e57;
+  padding: 5px;
+  border-bottom: 2px solid rgb(141, 119, 119);
+  display: flex;
+  justify-content: space-between;
+}
+p{
+  margin: 0;
+  padding: 1px;
+  letter-spacing: 0.3px;
+  color: rgb(218, 218, 218);
+  font-size: 15px;
+  font-weight: 100;
+  font-family: arial
+}
+.delete{
+  display: flex;
+  align-items: center;
+  margin-right: 30px;
+  font-size: 25px;
+}
