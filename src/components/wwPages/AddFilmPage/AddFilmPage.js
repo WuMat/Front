@@ -67,7 +67,8 @@ class AddFilm extends React.Component{
   sendFilmHandler = (event) =>{
     event.preventDefault();
     this.setState({loading: true})
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user')
 
    
     const formData ={};
@@ -75,7 +76,7 @@ class AddFilm extends React.Component{
       formData[nameData] = this.state.filmInput[nameData].value
     }
        
-    axios.post('/films/', formData, { headers: { Authorization: token } })
+    axios.post('/films/', formData, { headers: { Authorization: token, userId: user } })
     .then(response=>{
       this.setState({loading:false})
       this.props.history.push({pathname: '/films'})

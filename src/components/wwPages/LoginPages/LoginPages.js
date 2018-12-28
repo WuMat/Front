@@ -65,6 +65,7 @@ class Login extends React.Component {
       const expirationDate = new Date(new Date().getTime() + response.data.expiresIn * 1000)
       localStorage.setItem('token', response.data.token)
       localStorage.setItem('expirationDate', expirationDate)
+      localStorage.setItem('user', response.data.userId)
       this.context.loginHandler()
     })
     .catch(err=>{
@@ -131,7 +132,7 @@ class Login extends React.Component {
           <div className='spider'>
           <img src={spider} alt='pajak'/> 
           </div>
-          <p className='opis'>Zaloguj sie do bazy filmow</p>
+          <p className='opis'>Zaloguj sie do własnej bazy filmów</p>
           <form className='login-inputy'>
              {inputs}
           </form>

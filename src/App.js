@@ -27,7 +27,8 @@ class App extends Component {
   }
   logoutHandler = () => {
     localStorage.removeItem('token');
-    localStorage.removeItem('expirationDate')
+    localStorage.removeItem('expirationDate');
+    localStorage.removeItem('user')
     this.setState({
       isAuth: false
     })

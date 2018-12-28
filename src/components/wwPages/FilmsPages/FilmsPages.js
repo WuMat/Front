@@ -16,9 +16,10 @@ class FilmsPages extends React.Component{
 
   componentDidMount(){
     const token = localStorage.getItem('token')
+    const user = localStorage.getItem('user')
     const URL = '/films'
     
-   axios.get(URL, { headers: { Authorization: token } })
+   axios.get(URL, { headers: { Authorization: token, userId: user } })
     .then(response => {
       this.setState({
         loadedFilms: response.data.films
