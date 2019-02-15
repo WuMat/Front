@@ -9,7 +9,7 @@ import AuthContext from './auth-context';
 
 
 
-class App extends Component {
+export class App extends Component {
   state={
     isAuth: false
   }

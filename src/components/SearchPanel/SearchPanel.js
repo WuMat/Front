@@ -1,12 +1,23 @@
-import React from 'react'
+import React from "react";
+import "./SearchPanel.css";
 
-class SearchPanel extends React.PureComponent{
-  render(){
-    return(
-      <>
-      </>
-    )
-  }
-}
-
-export default SearchPanel
+export const SearchPanel = props => {
+  console.log(props);
+  return (
+    <div
+      className="modal"
+      style={{
+        transform: props.show ? " translateY(0)" : " translateY(-100%)",
+        opacity: props.show ? "1" : " 0"
+      }}
+    >
+      <p>znajdz film</p>
+      <input
+        type="text"
+        placeholder="wyszukaj film"
+        onChange={props.onChange}
+        value={props.value}
+      />
+    </div>
+  );
+};

@@ -1,80 +1,107 @@
-import React from 'react';
-import {NavLink} from 'react-router-dom'
-import axios from '../../../axios'
-import Film from '../../Film/Film'
-import SearchPanel from '../../SearchPanel/SearchPanel'
+import React, { useEffect, useState, useContext } from "react";
+import debounce from "lodash/debounce";
+import { NavLink } from "react-router-dom";
+import axios from "../../../axios";
 
-import './FilmsPages.css'
-import AuthContext from '../../../auth-context';
+import Film from "../../Film/Film";
+import { SearchPanel } from "../../SearchPanel/SearchPanel";
 
-class FilmsPages extends React.Component{
-  static contextType = AuthContext;
-  state={
-    loadedFilms: [],
-    showSearchPanel: true
-    }
+import "./FilmsPages.css";
+import AuthContext from "../../../auth-context";
 
-  componentDidMount(){
-    const token = localStorage.getItem('token')
-    const user = localStorage.getItem('user')
-    const URL = '/films'
-    
-   axios.get(URL, { headers: { Authorization: token, userId: user } })
-    .then(response => {
-      this.setState({
-        loadedFilms: response.data.films
+export const FilmsPages = props => {
+  const [showSearchPanel, setShowSearchPanel] = useState(false);
+  const [loadedFilms, setLoadedFilms] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
+  const auth = useContext(AuthContext);
+
+  useEffect(() => {
+    download(setLoadedFilms);
+  }, []);
+
+  const sideDrawerHandler = () => {
+    setShowSearchPanel(!showSearchPanel);
+  };
+
+  const deleteHandler = id => {
+    const token = localStorage.getItem("token");
+
+    axios
+      .delete(`/films/${id}`, { headers: { Authorization: token } })
+      .then(response => {
+        console.log(response);
+        window.location.reload();
       })
-    })
-  }
-  sideDrawerHandler = () => {
-    console.log('szukaj');
-  }
+      .catch(err => {
+        console.log(err);
+      });
+  };
 
-  deleteHandler = (id) => {
-    const token = localStorage.getItem('token')
+  const inputChangeHandler = e => {
+    setSearchValue(e.target.value);
 
-    axios.delete(`/films/${id}`, { headers: { Authorization: token } })
-    .then(response=>{
-      console.log(response)
-      window.location.reload(); 
-      
-    })
-    .catch(err=>{
-      console.log(err);
-      })
-  }
+    const token = localStorage.getItem("token");
+    const data = { name: e.target.value };
 
-  render(){
-   
-    let films = null;
-    films = this.state.loadedFilms.map(film => {
-      return(
-        <Film
+    searchDebounce(data, token, setLoadedFilms);
+  };
+
+  let films = null;
+  films = loadedFilms.map(film => {
+    return (
+      <Film
         key={film._id}
         titlePl={film.titlePl}
         title={film.title}
         size={film.size}
         diskName={film.diskName}
-        delete={() => this.deleteHandler(film._id)}
+        delete={() => deleteHandler(film._id)}
+      />
+    );
+  });
+
+  return (
+    <div className="wrapPages">
+      <div className="filmsPages">
+        <SearchPanel
+          show={showSearchPanel}
+          value={searchValue}
+          onChange={e => inputChangeHandler(e)}
         />
-      )
-    });
-    let searchPanel = (
-      this.state.showSearchPanel ? <SearchPanel /> : null 
-    )
-    return(
-      <div className='wrapPages'>
-      {searchPanel}
-        <div className='filmsPages'>
-          <div className="title">
-            <button onClick={this.sideDrawerHandler} className='clicky'>Szukaj</button>
-            <button onClick={this.context.logoutHandler} className='clicky'>Wyloguj</button>
-            <NavLink to='/addFilm'><button className='clicky'>Dodaj</button></NavLink>
-          </div>
-         {films}
+        <div className="baseFIlm">BAZA FILMOW</div>
+        <div className="title">
+          <button onClick={sideDrawerHandler} className="clicky">
+            Szukaj
+          </button>
+          <button onClick={auth.logoutHandler} className="clicky">
+            Wyloguj
+          </button>
+          <NavLink to="/addFilm">
+            <button className="clicky">Dodaj</button>
+          </NavLink>
         </div>
+        {films}
       </div>
-    )
-  }
-}
-export default FilmsPages
+    </div>
+  );
+};
+export default FilmsPages;
+
+const download = async cb => {
+  const token = localStorage.getItem("token");
+  const user = localStorage.getItem("user");
+  const URL = "/films";
+
+  const data = await axios.get(URL, {
+    headers: { Authorization: token, userId: user }
+  });
+  cb(data.data.films);
+};
+
+const searchDebounce = debounce(async (data, token, saveToState) => {
+  const downoladedData = await axios.post(`/films/search`, data, {
+    headers: { Authorization: token }
+  });
+
+  saveToState(downoladedData.data.films);
+}, 500);

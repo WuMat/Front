@@ -1,3 +1,6 @@
+.filmsPages {
+  position: relative;
+}
 .title {
   padding: 10px 20px;
   background-color: #282c34;
@@ -8,7 +11,7 @@
   display: flex;
   justify-content: space-between;
 }
-.clicky{
+.clicky {
   width: 80px;
   height: 22px;
   border: none;
@@ -16,16 +19,25 @@
   color: rgb(240, 240, 240);
   outline: none;
 }
-.title a .clicky{
+.title a .clicky {
   height: 22px;
 }
-@media(min-width:520px){
-  .wrapPages{
+.baseFIlm {
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgb(240, 240, 240);
+  letter-spacing: 5px;
+  font-size: 20px;
+}
+@media (min-width: 520px) {
+  .wrapPages {
     display: flex;
     justify-content: center;
-    background-color: #191b1f
+    background-color: #191b1f;
   }
-  .filmsPages{
-    width: 364px
+  .filmsPages {
+    width: 364px;
   }
- }
+}

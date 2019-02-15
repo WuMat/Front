@@ -1,0 +1,23 @@
+.modal {
+  width: 100%;
+  padding: 10px;
+  height: 50px;
+  box-sizing: border-box;
+  background-color: #282c34;
+  position: fixed;
+  display: flex;
+  justify-content: space-around;
+  z-index: 100;
+  transition: all 1s;
+}
+.modal p {
+  line-height: 200%;
+}
+.modal input {
+  padding: 5px;
+}
+@media (min-width: 520px) {
+  .modal {
+    width: inherit;
+  }
+}
