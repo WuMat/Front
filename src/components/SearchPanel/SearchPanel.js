@@ -2,7 +2,6 @@ import React from "react";
 import "./SearchPanel.css";
 
 export const SearchPanel = props => {
-  console.log(props);
   return (
     <div
       className="modal"

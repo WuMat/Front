@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import debounce from "lodash/debounce";
 import { NavLink } from "react-router-dom";
 import axios from "../../../axios";
@@ -7,13 +7,12 @@ import Film from "../../Film/Film";
 import { SearchPanel } from "../../SearchPanel/SearchPanel";
 
 import "./FilmsPages.css";
-import AuthContext from "../../../auth-context";
+import Context from "../../../auth-context";
 
 export const FilmsPages = props => {
   const [showSearchPanel, setShowSearchPanel] = useState(false);
   const [loadedFilms, setLoadedFilms] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-  const auth = useContext(AuthContext);
 
   useEffect(() => {
     download(setLoadedFilms);
@@ -73,9 +72,16 @@ export const FilmsPages = props => {
           <button onClick={sideDrawerHandler} className="clicky">
             Szukaj
           </button>
-          <button onClick={auth.logoutHandler} className="clicky">
-            Wyloguj
-          </button>
+          <Context.Consumer>
+            {appReducer => (
+              <button
+                onClick={() => appReducer({ type: "logoutHandler" })}
+                className="clicky"
+              >
+                Wyloguj
+              </button>
+            )}
+          </Context.Consumer>
           <NavLink to="/addFilm">
             <button className="clicky">Dodaj</button>
           </NavLink>
