@@ -1,45 +1,51 @@
-import React, { useEffect, useReducer } from "react";
+import React, { lazy, Suspense, useEffect, useReducer } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
+import PropTypes from "prop-types";
 
-import LoginPages from "./components/wwPages/LoginPages/LoginPages";
-import FilmsPages from "./components/wwPages/FilmsPages/FilmsPages";
-import AddFilm from "./components/wwPages/AddFilmPage/AddFilmPage";
-import PermissionComponent from "./components/PersmissionComponent/PermissionComponent";
 import Context from "./auth-context";
-
 import { appReducer } from "./reducer";
+import PermissionComponent from "./components/PersmissionComponent/PermissionComponent";
 
-export const App = props => {
+const LoginPages = lazy(() =>
+  import("./components/wwPages/LoginPages/LoginPages")
+);
+const FilmsPages = lazy(() =>
+  import("./components/wwPages/FilmsPages/FilmsPages")
+);
+const AddFilm = lazy(() =>
+  import("./components/wwPages/AddFilmPage/AddFilmPage")
+);
+
+const App = props => {
   const [state, dispatch] = useReducer(appReducer, { isAuth: false });
 
   useEffect(() => {
-    checkAuth();
-  });
+    dispatch({ type: "checkLogin" });
+  }, []);
 
-  const checkAuth = () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      dispatch({ type: "logoutHandler" });
-    } else {
-      dispatch({ type: "loginHandler" });
-    }
-  };
   return (
     <Context.Provider value={dispatch}>
-      <Switch>
-        {state.isAuth ? (
-          <Redirect from="/login" to="/films" />
-        ) : (
-          <Route path="/login" exec component={LoginPages} />
-        )}
-        <PermissionComponent auth={state.isAuth}>
-          <Route path="/films" exec component={FilmsPages} />
-          <Route path="/addfilm" exec component={AddFilm} />
-        </PermissionComponent>
-        <Redirect from="/" to="/login" />
-      </Switch>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Switch>
+          {state.isAuth ? (
+            <Redirect from="/login" to="/films" />
+          ) : (
+            <Route path="/login" exec component={LoginPages} />
+          )}
+          <PermissionComponent auth={state.isAuth}>
+            <Route path="/films" exec component={FilmsPages} />
+            <Route path="/addfilm" exec component={AddFilm} />
+          </PermissionComponent>
+          <Redirect from="/" to="/login" />
+        </Switch>
+      </Suspense>
     </Context.Provider>
   );
 };
 
 export default App;
+
+Route.propTypes.component = PropTypes.oneOfType([
+  Route.propTypes.component,
+  PropTypes.object
+]);

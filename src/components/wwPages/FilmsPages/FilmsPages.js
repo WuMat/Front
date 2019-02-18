@@ -9,7 +9,7 @@ import { SearchPanel } from "../../SearchPanel/SearchPanel";
 import "./FilmsPages.css";
 import Context from "../../../auth-context";
 
-export const FilmsPages = props => {
+const FilmsPages = props => {
   const [showSearchPanel, setShowSearchPanel] = useState(false);
   const [loadedFilms, setLoadedFilms] = useState([]);
   const [searchValue, setSearchValue] = useState("");
