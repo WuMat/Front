@@ -1,10 +1,7 @@
-import React from 'react'
+import React from "react";
 
-export const AuthContext = React.createContext({
-  isAuth: false,
-  loginHandler: ()=>{},
-  logoutHandler: ()=>{}
-  });
+export const Context = React.createContext({
+  appReducer: () => {}
+});
 
-
-export default AuthContext
+export default Context;
